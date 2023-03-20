@@ -1,0 +1,19 @@
+- name: test my new module
+  hosts: all
+  tasks:
+  - name: run the new module
+    become: true
+    wireguard:
+      interface: wg0
+      peer_public_key: "{{ item.0 }}"
+      peer_allowed_ips:
+      - "{{ item.1 }}"
+      state: absent
+    with_together:
+      - ['some-public key']
+      - ['10.0.0.2/32']
+    register: testout
+
+  - name: dump test output
+    debug:
+      msg: '{{ testout }}'
